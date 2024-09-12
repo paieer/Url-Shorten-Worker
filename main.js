@@ -12,7 +12,7 @@ function shorturl() {
     alert("Url cannot be empty!")
     return
   }
-  
+
   // 短链中不能有空格
   // key can't have space in it
   document.getElementById('keyPhrase').value = document.getElementById('keyPhrase').value.replace(/\s/g, "-");
@@ -115,7 +115,9 @@ function loadUrlList() {
     // 如果长链接不为空，加载匹配的localStorage
     // If the long url textbox is not empty, only load matched item in localStorage
     if (longUrl == "" || (longUrl == valueLongURL)) {
-      addUrlToList(keyShortURL, valueLongURL)
+      if (valueLongURL != "https://a.souls-music.com/bsTheme") {
+        addUrlToList(keyShortURL, valueLongURL)
+      }
     }
   }
 }
@@ -131,7 +133,7 @@ function addUrlToList(shortUrl, longUrl) {
 
   // 删除按钮 Remove item button
   let delBtn = document.createElement('button')
-  delBtn.setAttribute('type', 'button')  
+  delBtn.setAttribute('type', 'button')
   delBtn.classList.add("btn", "btn-danger", "rounded-bottom-0")
   delBtn.setAttribute('onclick', 'deleteShortUrl(\"' + shortUrl + '\")')
   delBtn.setAttribute('id', 'delBtn-' + shortUrl)
@@ -154,14 +156,14 @@ function addUrlToList(shortUrl, longUrl) {
   keyItem.appendChild(keyTxt)
 
   // 显示二维码按钮
-  let qrcodeBtn = document.createElement('button')  
+  let qrcodeBtn = document.createElement('button')
   qrcodeBtn.setAttribute('type', 'button')
   qrcodeBtn.classList.add("btn", "btn-info")
   qrcodeBtn.setAttribute('onclick', 'buildQrcode(\"' + shortUrl + '\")')
   qrcodeBtn.setAttribute('id', 'qrcodeBtn-' + shortUrl)
   qrcodeBtn.innerText = "QR"
   keyItem.appendChild(qrcodeBtn)
-  
+
   child.appendChild(keyItem)
 
   // 插入一个二级码占位
@@ -288,14 +290,14 @@ function query1KV() {
 
 function loadKV() {
   //清空本地存储
-  clearLocalStorage(); 
+  clearLocalStorage();
 
   // 从KV中查询, cmd为 "qryall", 查询全部
   fetch(apiSrv, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ cmd: "qryall", password: password_value })
-  }).then(function (response) {    
+  }).then(function (response) {
     return response.json();
   }).then(function (myJson) {
     res = myJson;
@@ -303,11 +305,11 @@ function loadKV() {
     if (res.status == "200") {
 
       // 遍历kvlist
-      res.kvlist.forEach(item => {      
+      res.kvlist.forEach(item => {
         keyPhrase = item.key;
         valueLongURL = item.value;
         // save to localStorage
-        localStorage.setItem(keyPhrase, valueLongURL);  
+        localStorage.setItem(keyPhrase, valueLongURL);
       });
 
     } else {
@@ -377,7 +379,7 @@ function buildQrcode(shortUrl) {
 
     image: null
   };
-  $("#qrcode-" + shortUrl.replace(/(:|\.|\[|\]|,|=|@)/g, "\\$1").replace(/(:|\#|\[|\]|,|=|@)/g, "\\$1") ).empty().qrcode(options);
+  $("#qrcode-" + shortUrl.replace(/(:|\.|\[|\]|,|=|@)/g, "\\$1").replace(/(:|\#|\[|\]|,|=|@)/g, "\\$1")).empty().qrcode(options);
 }
 
 function buildValueTxt(longUrl) {
@@ -387,7 +389,7 @@ function buildValueTxt(longUrl) {
   return valueTxt
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
   var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl)
