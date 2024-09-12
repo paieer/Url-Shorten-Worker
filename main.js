@@ -115,9 +115,7 @@ function loadUrlList() {
     // 如果长链接不为空，加载匹配的localStorage
     // If the long url textbox is not empty, only load matched item in localStorage
     if (longUrl == "" || (longUrl == valueLongURL)) {
-      if (valueLongURL != "https://a.souls-music.com/bsTheme") {
-        addUrlToList(keyShortURL, valueLongURL)
-      }
+      addUrlToList(keyShortURL, valueLongURL)
     }
   }
 }
